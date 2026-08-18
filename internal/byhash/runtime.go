@@ -82,7 +82,13 @@ func GrowHash(dst []byte, extra byte) []byte {
 }
 
 func WrapSuiteDenied(op, suite string) error {
-	return errors.New(op + ": suite " + suite + ": " + ErrSuite.Error())
+	if strings.TrimSpace(op) == "" {
+		op = "publish"
+	}
+	if strings.TrimSpace(suite) == "" {
+		suite = "unknown"
+	}
+	return fmt.Errorf("%s: suite %s: %w", op, suite, ErrSuite)
 }
 
 func WaitPublish(ctx context.Context, d time.Duration) error {
